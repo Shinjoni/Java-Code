@@ -1,27 +1,21 @@
 //This is the main Method  
 
 import java.util.ArrayList;     
-
 import java.util.Scanner;        
-
 import java.io.BufferedWriter;    
-
 import java.io.File;    
-
 import java.io.FileWriter;    
-
 import java.io.IOException;    
-
-   
+import java.io.BufferedReader; 
+import java.io.FileReader; 
+import java.io.IOException; 
+ 
 
 public class Main {       
 
     public static void main(String[] args) {       
-
         ArrayList <Object> ObjectList = new ArrayList <Object>();     
-
         int choiceentry;     //This was initialized to show the choices the user has  
-
         Scanner scanner = new Scanner(System.in);       
         do {       
             System.out.println("Enter one of the following commands:");       
@@ -33,7 +27,8 @@ public class Main {
             System.out.println("6 - Location of One Object");       
             System.out.println("7 - Show Map of Everything");       
             System.out.println("8 - Save and Exit Program");       
-
+            System.out.println("9 - Read into an older file"); 
+            
             choiceentry = scanner.nextInt();       
 
             boolean create = true;     // This was set as true in order to establish an exit to the program and also continually ask users for information  
@@ -125,14 +120,11 @@ public class Main {
                         { 
                         human.setName(name);       
                         } 
-
                         else 
-
                         { 
                             System.out.println("This program does not allow duplicate name entries. Please try again"); 
                         } 
 
-                         
                         System.out.println("Enter location of the Person");       
                         scanner.nextLine();       
                         String location = scanner.next(); 
@@ -357,8 +349,6 @@ public class Main {
 
                 }      
 
-   
-
                 break; // break out of the nested switch statement  
 
             case 4:        
@@ -405,20 +395,22 @@ public class Main {
                 break;       
 
             case 8:       
-                create = false;   
+            	Write(ObjectList);
+            	System.out.println("Saving Program");
+               // create = false;   
 
                 break;    
 
             case 9:  
-
-                Write(ObjectList);  
+            	Reader(ObjectList);
+            	System.out.println("File read sucessfully");
 
             default:       
 
             }          
 
-        } while (choiceentry != 8);       
-        System.out.println("Saving Program");  
+        } while (choiceentry != 10);       
+          
 
         //Write to program  
 
@@ -439,245 +431,121 @@ public class Main {
                     if (ListofObjects.get(j).getMove() == false)  //if the itemName can't move exit  
                         {   
                             return itemName + " cannot move. Please try again.";         
-
                         }   
-
-   
-
                     }           
-
                 }         
 
                 if (j==-1)  
-
                 {         
-
                     return itemName + " is not in the list. Please try again.";       //If the item name is not in the list, exit  
-
                 }         
-
-   
-
-   
 
                 for(h=0;  h < ListofObjects.size(); h++)   //Loop through the list a second time for newLocation  
-
                 {         
-
                     if( ListofObjects.get(h).getName().contentEquals(newLocation)) //Once location is found  
-
                     {   
-
                         d=h;                                             //Set the variable of new location  
-
                         if (ListofObjects.get(d).getStore() == false)  //If the newLocation cannot store  
-
                         {   
-
                             return  newLocation + " cannot hold this item. Please try again.";  
-
                         }   
-
                         if (ListofObjects.get(j).getName() == ListofObjects.get(d).getName())  //If the newLocation is the same as the Current Item  
-
                         {   
-
                              return "You cannot move an object inside of itself. Please try again.";   
-
                         }      
-
                     }   
-
                 }  
-
                 if (d==-1) //If the item was not found in the list  
-
                 {         
-
                     return newLocation + " is not in the list";         
-
                 }         
-
                 ListofObjects.get(j).setLocation(ListofObjects.get(d).getName());     //After all is said and done the Object can move  
-
                 ListofObjects.get(j).setLost(false);//Anytime a location is set isLost will be considered false. This is to make the Lost bool at Erase is changed especially after it is moved  
-
    
-
                 return itemName + " has moved to " + newLocation;        
-
             }         
 
-              
-
-      
-
     public static void Erase(ArrayList<Object> ListofObjects, String itemName)    
-
     {    
-
         int h,i,j = -1;         
-
         /*    
-
          * Search for the item in the list    
-
          * Informs the user that it had objects there and where it was last seen.    
-
          * Informs the user that other objects have been moved out.  
-
          * Removes the item from the list completely    
-
          */   
 
 //This method is not static because it will print out multiple statements depending on the location of the item  
 
         for(i=0;  i < ListofObjects.size(); i++) //Search through the Array List       
-
         {         
-
             if( ListofObjects.get(i).getName().contentEquals(itemName))  //Once the object is found       
-
             {    
-
                 j=i;  
-
                 for(h=0;  h < ListofObjects.size(); h++)   //Loop through the list a second time for things in itemName that belonged to this location  
-
                 {         
-
                     if( ListofObjects.get(j).getName().contentEquals(ListofObjects.get(h).getLocation())) //Once location of other items is similar to the name of items in the list  
-
               {   
 
                 System.out.println("Keep in mind that:" + ListofObjects.get(h).getName() + " has lost its location and was last seen in :" + itemName );  
-
                 ListofObjects.get(h).setLost(true); // This will make the object at h false  
-
             }   
-
-          
-
         }  
-
                 ListofObjects.remove(j);  //Remove the object   
-
                 System.out.println(itemName + " has been removed sucessfully");  
-
-                             
-
-   
-
             }    
-
-      
-
         }  
-
-          
 
         if(j== -1) //if j didn't change  
-
         {  
-
             System.out.println(itemName + " is not in the list");         
-
         }         
-
         }         
-
-   
-
-   
 
     public static String findLocation(ArrayList<Object> ListofObjects, String itemName)    
-
     {    
-
         // This will search through the list and print out that item's location  
-
         int i;  
-
         for(i=0;  i < ListofObjects.size(); i++)  //Search through the ObjectList <ArrayList>  
-
         {         
-
-      
-
             if( ListofObjects.get(i).getName().contentEquals(itemName))   //If the position at index i is equal to the desired itemname  
-
             {    
-
                 return "The location of " + itemName + " is " + ListofObjects.get(i).getLocation();            
-
             }    
-
-              
-
         }           
-
             return itemName + " is not in the list. Please try again";      //If the search continues all the way but doesn't find the desired itemname have the user try again.  
-
-            
-
-          
-
     }    
 
     public static  boolean CheckDups(ArrayList<Object> ListofObjects, String name)    
-
     {    
 
         /* This will check through the entire ListofObjects for duplicate name entries.  
-
          * Search through the entire list... twice  
-
          * See if there is are any duplicate name entries  
-
          * If there are just return true  
-
          */  
-
         int i,h;         
-
         for(i=0;  i < ListofObjects.size(); i++)         
-
         {         
-
             if(ListofObjects.get(i).getName().contentEquals(name)) 
-
             { 
-
                 return true; 
-
             }        
-
         }         
-
         return false;    
-
     } 
 
     public static boolean CheckLoc(ArrayList<Object> ListofObjects, String location) 
-
     { 
-
         /* This will check through the entire ListofObjects for bad locations, or items that cannot store.   
-
          * Search through the entire list and check if the name at ArrayPostion matches the location string 
-
          * If so print out the getStore Boolean 
-
          * See if there is are any duplicate name entries  
-
          * If there are just return true  
-
          */  
 
         int i,h;         
-
         for(i=0;  i < ListofObjects.size(); i++)         
-
         {         
 
             if(ListofObjects.get(i).getName().contentEquals(location)) 
@@ -686,25 +554,17 @@ public class Main {
                     }                            
 
         }         
-
         return false;    
-
-         
-
     } 
 
     public static boolean CheckLoc2(ArrayList<Object> ListofObjects, String location) 
-
     { 
-
         /* This will check if the Object that it is moving into isn't an Object Room
          * True if the object moved to is a room, False if its a different object
          */  
 
         int i,h;         
-
         for(i=0;  i < ListofObjects.size(); i++)         
-
         {         
 
             if(ListofObjects.get(i).getName().contentEquals(location)) 
@@ -716,69 +576,47 @@ public class Main {
                     }                            
 
         }         
-
         return false;    
-
-         
-
     } 
-    
-  
 
         public static void Write(ArrayList<Object> ListofObjects) {    
-
             /* 
-
              * This is the part of the code that writes the new file or does the saving 
-
              * It works by sifting through the entire Array List 
-
              * Then it prints out the Location First and then the Building. 
-
              * Next it prints out all of the objects inside of that building 
-
              * Then it moves onto the next item in the array list. 
-
              * Buildings only have 2 tabs in front of them, then their objects inside 
-
              * BuildingRooms have 5 tabs in front of them, then their objects inside 
-
              * Objects have 7 tabs in front of them, then their objects inside 
-
              * At the end there is also a lost and found that gets printed out for Objects that got erased. 
-
              * There is a legend that gets printed to indicate what type of object is being printed 
-
-             * This is created in this fashion in order for us to tell what is what when this file is being read into. 
-
+             * This is created in this fashion in order for us to tell what is what when this file is being read into.
+             * 
+             *  It pains me to say that Linux is able to hold the /n command but Windows it not able to
+             *  Therefore there are comments in the code regarding where the nextLine code is actually placed and where it is not placed
              */ 
 
             BufferedWriter bw = null;    
-
             try {    
-
                 int i,j,h,l,f;
-                //Specify the file name and path here    
-
-                File file = new File("//home//faithfulaegis//Desktop//file.gedit");    
-
                 
+                //Specify the file name and path here    
+                File file = new File("C:\\Users\\shinj\\Desktop\\file.txt");    
 
-                if (!file.exists()) {    
-
+                if (!file.exists()) {     
                     file.createNewFile();    
-
                 }    
 
                 FileWriter fw = new FileWriter(file);    
-
                 bw = new BufferedWriter(fw);    
 // Searches through the arraylist and prints out all of the Objects and their locations
                 for(i=0; i < ListofObjects.size();i++)//Search the entire list
                 {
                 	if(ListofObjects.get(i).getBuild()==true)//If the Item is a Building
                 	{
-                		bw.append("\n" + ListofObjects.get(i).getLocation() +"\t\t\t " + ListofObjects.get(i).getName() + typeAdd(ListofObjects,ListofObjects.get(i).getName()) + " holds:" );// Prints the location of the building, Buildings are 3 tabs away from the location   
+                		bw.newLine();
+                		bw.append(" " + ListofObjects.get(i).getLocation() +"\t\t\t " + ListofObjects.get(i).getName() + typeAdd(ListofObjects,ListofObjects.get(i).getName()) + " holds:" );// Prints the location of the building, Buildings are 3 tabs away from the location   
                 		for(j=0; j<ListofObjects.size(); j++)
                 		{
                 			if(ListofObjects.get(i).getName().contentEquals(ListofObjects.get(j).getLocation()))//If the Location is located anywhere else in the arrayList
@@ -797,11 +635,13 @@ public class Main {
                 	{
                 		if(ListofObjects.get(i).isLost() == true)
                     	{
-                    		bw.append("\n \t\t\t\t\t" + ListofObjects.get(i).getName()+ typeAdd(ListofObjects,ListofObjects.get(i).getName()) + ".l is lost, it was last seen inside:" + ListofObjects.get(i).getLocation() +" it was also holding:");
+                			bw.newLine();
+                    		bw.append("\t\t\t\t\t " + ListofObjects.get(i).getName()+ typeAdd(ListofObjects,ListofObjects.get(i).getName()) + ".l is lost, it was last seen inside:" + ListofObjects.get(i).getLocation() + ". " + ListofObjects.get(i).getName()+ " was also holding:");
                     	}
                 		else
                 		{
-                			bw.append("\n \t\t\t\t\t" + ListofObjects.get(i).getName()+ typeAdd(ListofObjects,ListofObjects.get(i).getName()) + " holds:");// Building Rooms are 5 tabs away	
+                			bw.newLine();
+                			bw.append("\t\t\t\t\t " + ListofObjects.get(i).getName()+ typeAdd(ListofObjects,ListofObjects.get(i).getName()) + " holds:");// Building Rooms are 5 tabs away	
                 		}
                 		
                 		for(h = 0; h < ListofObjects.size(); h++)
@@ -820,11 +660,13 @@ public class Main {
                 	{
                 		if(ListofObjects.get(i).isLost() == true)
                     	{
-                    		bw.append("\n \t\t\t\t\t\t\t" + ListofObjects.get(i).getName() + typeAdd(ListofObjects,ListofObjects.get(i).getName()) + ".l is lost, it was last seen inside:" + ListofObjects.get(i).getLocation() +" it was also holding:");
+                			bw.newLine();
+                    		bw.append("\t\t\t\t\t\t\t " + ListofObjects.get(i).getName() + typeAdd(ListofObjects,ListofObjects.get(i).getName()) + ".l is lost, it was last seen inside:" + ListofObjects.get(i).getLocation() + ". " + ListofObjects.get(i).getName()+ " was also holding:");
                     	}
                 		else
                 		{
-                		bw.append("\n \t\t\t\t\t\t\t" + ListofObjects.get(i).getName() + typeAdd(ListofObjects,ListofObjects.get(i).getName()) + " holds:"); // Objects are 7 tabs away
+                		bw.newLine();
+                		bw.append("\t\t\t\t\t\t\t " + ListofObjects.get(i).getName() + typeAdd(ListofObjects,ListofObjects.get(i).getName()) + " holds:"); // Objects are 7 tabs away
                 		}
                 		for(l = 0; l < ListofObjects.size(); l++) // check the entire list
                 		{
@@ -838,14 +680,35 @@ public class Main {
                 			}
                 		}
                 	}
-                	
-                	
                 }
-                //This is the legend code
-                bw.append("\n\n\n This is the legends \n .b = building\n .r = buildingRoom\n .p = person\n .c = clothing\n .ms = CanMove CanStore\n .s = CanStore Cannot Move\n .m = CanMove Not store\n .s = CanStore CannotMove\n .z= NoMove NoStore\n .l = item is lost");
+                //This is the legend code. Also this was a pain to rewrite for windows.
+                bw.newLine();
+                bw.newLine();
+                bw.newLine();
+                bw.append("Legend");
+                bw.newLine();
+                bw.append(".b = building");
+                bw.newLine();
+                bw.append(".r = buildingRoom");
+                bw.newLine();
+                bw.append(".p = person");
+                bw.newLine();
+                bw.append(".c = clothing");
+                bw.newLine();
+                bw.append(".ms = CanMove CanStore");
+                bw.newLine();
+                bw.append(".s = CanStore Cannot Move");
+                bw.newLine();
+                bw.append(".m = CanMove Not store");
+                bw.newLine();
+                bw.append(".s = CanStore CannotMove");
+                bw.newLine();
+                bw.append(".z= NoMove NoStore");
+                bw.newLine();
+                bw.append(".l = item is lost");
+                // legacy "I worked so hard to get this on debian code" bw.append("\n\n\n Legend: +" bw.newLine(); + "\n .b = building\n .r = buildingRoom\n .p = person\n .c = clothing\n .ms = CanMove CanStore\n .s = CanStore Cannot Move\n .m = CanMove Not store\n .s = CanStore CannotMove\n .z= NoMove NoStore\n .l = item is lost");
 
                 System.out.println("File written Successfully");    
-
                 bw.flush();    
 
             } catch (IOException ioe) {    
@@ -922,6 +785,131 @@ public class Main {
         	return "";
         }
 
+        public static void Reader(ArrayList<Object> ListofObjects)
+        { 
+            { 
+            	int i,j,k,l;
+            	int startN=0,endN=0,startL=0,endL=0;
+                BufferedReader reader = null; 
+                try { 
+                    String sCurrentLine; 
+                    reader = new BufferedReader(new FileReader("C:\\Users\\shinj\\Desktop\\file.txt")); 
+                    while ((sCurrentLine = reader.readLine()) != null) { 
+                    	//logic for the code goes here bub...
+                   
+                    	if(sCurrentLine.contentEquals(""))
+                    	{
+                    		continue;
+                    	}
+                    	//Find the building Location and building name, then set that as a variable in the code
+                    	
+                    	else if (sCurrentLine.contains(".b") && sCurrentLine.contains(":")) //If this line has a ".b" or a building in it
+                    	{
+                    		for(i=0; i<sCurrentLine.length()-1; i++) // Search the entire string of this line
+                    		{
+                    			if(sCurrentLine.substring(i).startsWith("\t"))
+                    				/*Starting from the beginning and ending with the last character before the tab.
+                    				 * The start of every building is just the location without any spaces
+                    				 * There can be multiple spaces if there are a lot of things inside the building
+                    				 */
+                    			{
+                    				endL = i; //swap the value of end with i;
+                    			}
+                    			if(sCurrentLine.substring(i).startsWith(" ") && endN == 0 ) 
+                    				/* 
+                    				 * if The current line has a space (all of them have a space before writing the name of the building, by design of course)
+                    				 * Then that value at i will be one character away from the start of the string
+                    				 * The && operator is there to avoid the problem when this line holds other items and there is a space there. 
+                    				 */ 
+                    			{
+                    				startN = i;
+                    			}
+                    			if(sCurrentLine.substring(i).startsWith("."))
+                    			/*
+                    			 * This dot locator is put in place in order to find the .b. 
+                    			 * For the reader the program already knows this is going to be a building
+                    			 */
+                    			{
+                    				endN = i;
+                    			}
+                    		}
+                    		String buildLoc = sCurrentLine.substring(0,endL); //buildLoc finally has the value of the location part of the string
+                    		String buildName = sCurrentLine.substring((startN+1), endN);
+                    		//Create a building variable and set the Location along with the Name
+                    		Building Build = new Building();  //Builds the building Object
+                    		Build.setLocation(buildLoc);  
+                            Build.setName(buildName);
+                            ListofObjects.add(Build);    // Object is added to the Array 
+                    	}
+                    		 
+                    	else if (sCurrentLine.contains(".r") && sCurrentLine.contains(":")) //If this line has a ".r" or a building in it
+                    	{
+                    		for(i=0; i<sCurrentLine.length()-1; i++) // Search the entire string of this line
+                    		{
+                    			if(sCurrentLine.substring(i).startsWith("\t"))
+                    				/*Starting from the beginning and ending with the last character before the tab.
+                    				 * The start of every room has 5 tabs is just the location without any spaces
+                    				 * There can be multiple spaces if there are a lot of things inside the building
+                    				 */
+                    			{
+                    				startL = i; //swap the value of end with i;
+                    			}
+                    			if(sCurrentLine.substring(i).startsWith("\t"))
+                    				/*Starting from the beginning and ending with the last character before the tab.
+                    				 * The start of every room has 5 tabs is just the location without any spaces
+                    				 * There can be multiple spaces if there are a lot of things inside the building
+                    				 */
+                    			{
+                    				endL = i; //swap the value of end with i;
+                    			}
+                    			if(sCurrentLine.substring(i).startsWith(" ") && endN == 0 ) 
+                    				/* 
+                    				 * if The current line has a space (all of them have a space before writing the name of the building, by design of course)
+                    				 * Then that value at i will be one character away from the start of the string
+                    				 * The && operator is there to avoid the problem when this line holds other items and there is a space there. 
+                    				 */ 
+                    			{
+                    				startN = i;
+                    			}
+                    			if(sCurrentLine.substring(i).startsWith("."))
+                    			/*
+                    			 * This dot locator is put in place in order to find the .b. 
+                    			 * For the reader the program already knows this is going to be a building
+                    			 */
+                    			{
+                    				endN = i;
+                    			}
+                    		}
+                    		String buildLoc = sCurrentLine.substring(0,endL); //buildLoc finally has the value of the location part of the string
+                    		String buildName = sCurrentLine.substring((startN+1), endN);
+                    		//Create a building variable and set the Location along with the Name
+                    		Building Build = new Building();  //Builds the building Object
+                    		Build.setLocation(buildLoc);  
+                            Build.setName(buildName);
+                            ListofObjects.add(Build);    // Object is added to the Array 
+                    	}
+                    	
+                    	System.out.println(sCurrentLine);
+                    	}
+                         
+                }     
+          
+                
+            catch (IOException e) { 
+                    e.printStackTrace(); 
+                    System.out.print(e.getMessage()); 
+                } finally { 
+                    try { 
+          
+                        if (reader != null)reader.close(); 
+                    } catch (IOException ex) { 
+                        System.out.println(ex.getMessage()); 
+                        ex.printStackTrace(); 
+                    } 
+                } 
+            } 
+        } 
+         
     }   
 
  
