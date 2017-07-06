@@ -25,9 +25,10 @@ public class Main {
             System.out.println("4 - Move Object");       
             System.out.println("5 - Erase Object");       
             System.out.println("6 - Location of One Object");       
-            System.out.println("7 - Show Map of Everything");       
-            System.out.println("8 - Save and Exit Program");       
-            System.out.println("9 - Read into an older file"); 
+            System.out.println("7 - Save current map to a file (Write Program)");       
+            System.out.println("8 - Exit Program");
+            System.out.println("9 - Read into an older file (Read Program and Prints)"); 
+             
             
             choiceentry = scanner.nextInt();       
 
@@ -391,13 +392,14 @@ public class Main {
                 break;       
 
             case 7:       
-                //show map of all objects        
+                
+            	Write(ObjectList);
+            	System.out.println("Saving Program");
                 break;       
 
             case 8:       
-            	Write(ObjectList);
-            	System.out.println("Saving Program");
-               // create = false;   
+           	
+                create = false;   
 
                 break;    
 
@@ -409,11 +411,8 @@ public class Main {
 
             }          
 
-        } while (choiceentry != 10);       
-          
-
-        //Write to program  
-
+        } while (choiceentry != 8);       
+         System.out.println("Good Bye");
     }       
 
     public static String Move(ArrayList<Object> ListofObjects,String itemName, String newLocation){         
